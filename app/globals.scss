@@ -1,0 +1,274 @@
+@import '../styles/variables';
+
+// CSS Custom Properties (for dynamic theming)
+:root {
+  --color-primary: #{$color-primary};
+  --color-secondary: #{$color-secondary};
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-danger: #{$color-danger};
+  --color-info: #{$color-info};
+
+  --color-bg: #{$color-bg};
+  --color-surface: #{$color-surface};
+  --color-surface-light: #{$color-surface-light};
+  --color-text: #{$color-text};
+  --color-text-muted: #{$color-text-muted};
+
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+
+  --font-family-base: #{$font-family-base};
+}
+
+// Reset & Base Styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: $spacing-sm;
+}
+
+h1 { font-size: $font-size-4xl; }
+h2 { font-size: $font-size-3xl; }
+h3 { font-size: $font-size-2xl; }
+h4 { font-size: $font-size-xl; }
+h5 { font-size: $font-size-lg; }
+h6 { font-size: $font-size-base; }
+
+p {
+  margin-bottom: $spacing-sm;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color $transition-base;
+
+  &:hover {
+    color: lighten($color-primary, 10%);
+  }
+}
+
+// Utility Classes
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 $spacing-sm;
+
+  @include tablet {
+    padding: 0 $spacing-md;
+  }
+
+  @include desktop {
+    padding: 0 $spacing-lg;
+  }
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: var(--color-text-muted); }
+
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-sm { gap: $spacing-sm; }
+.gap-md { gap: $spacing-md; }
+.gap-lg { gap: $spacing-lg; }
+
+// Grid utility
+.grid {
+  display: grid;
+  gap: $spacing-md;
+
+  &.cols-1 {
+    grid-template-columns: 1fr;
+  }
+
+  &.cols-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  &.cols-3 {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+// Status indicators
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &.full {
+    background-color: rgba($color-success, 0.2);
+    color: $color-success;
+  }
+
+  &.ok {
+    background-color: rgba($color-info, 0.2);
+    color: $color-info;
+  }
+
+  &.low {
+    background-color: rgba($color-warning, 0.2);
+    color: $color-warning;
+  }
+
+  &.empty {
+    background-color: rgba($color-danger, 0.2);
+    color: $color-danger;
+  }
+}
+
+// Button styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: $font-size-base;
+  font-weight: 600;
+  border-radius: $border-radius-md;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-primary, 10%);
+    }
+  }
+
+  &.btn-secondary {
+    background-color: var(--color-surface-light);
+    color: var(--color-text);
+
+    &:hover:not(:disabled) {
+      background-color: lighten($color-surface-light, 5%);
+    }
+  }
+
+  &.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: $font-size-sm;
+  }
+
+  &.btn-lg {
+    padding: 1rem 2rem;
+    font-size: $font-size-lg;
+  }
+}
+
+// Card styles
+.card {
+  background-color: var(--color-surface);
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-lg;
+
+  @include tablet {
+    padding: $spacing-lg;
+  }
+}
+
+// Layout styles
+.header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-surface-light);
+  padding: $spacing-sm 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  .logo {
+    font-size: $font-size-2xl;
+    margin: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: $spacing-md;
+    list-style: none;
+
+    a {
+      padding: 0.5rem 1rem;
+      border-radius: $border-radius-md;
+      transition: background-color $transition-base;
+
+      &:hover {
+        background-color: var(--color-surface-light);
+      }
+    }
+  }
+}
+
+.main {
+  min-height: calc(100vh - 200px);
+  padding: $spacing-lg 0;
+}
+
+.footer {
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-surface-light);
+  padding: $spacing-md 0;
+  margin-top: $spacing-xl;
+}

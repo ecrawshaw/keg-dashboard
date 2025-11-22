@@ -1,0 +1,125 @@
+// Breakpoints (mobile-first)
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+
+// Colors
+$color-primary: #d97706;      // Amber (beer color)
+$color-secondary: #78350f;    // Brown (dark beer)
+$color-success: #10b981;      // Green (full keg)
+$color-warning: #f59e0b;      // Orange (low keg)
+$color-danger: #ef4444;       // Red (empty keg)
+$color-info: #3b82f6;         // Blue
+
+// Neutral colors
+$color-bg: #0f172a;           // Dark slate (background)
+$color-surface: #1e293b;      // Slate (cards)
+$color-surface-light: #334155; // Lighter slate
+$color-text: #f1f5f9;         // Light text
+$color-text-muted: #94a3b8;   // Muted text
+
+// SRM Beer Colors (Standard Reference Method)
+$srm-colors: (
+  1: #FFE699,   // Very pale lager
+  2: #FFD878,   // Pale lager
+  3: #FFCA5A,   // Pale ale
+  4: #FFBF42,   // Pale ale
+  5: #FBB123,   // Golden ale
+  6: #F8A600,   // Amber ale
+  8: #F39C00,   // Amber
+  10: #EA8F00,  // Deep amber
+  13: #E58500,  // Copper
+  17: #DD7900,  // Deep copper
+  20: #D26900,  // Light brown
+  24: #CA6500,  // Brown
+  29: #BF5B00,  // Dark brown
+  35: #B54C00,  // Very dark brown
+  40: #A64200   // Black
+);
+
+// Typography
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+$font-size-4xl: 2.25rem;
+
+// Border radius
+$border-radius-sm: 0.375rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+// Transitions
+$transition-fast: 150ms ease;
+$transition-base: 200ms ease;
+$transition-slow: 300ms ease;
+
+// Z-index
+$z-dropdown: 1000;
+$z-modal: 1050;
+$z-tooltip: 1100;
+
+// Mixins
+@mixin mobile {
+  @media (min-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin desktop-xl {
+  @media (min-width: $breakpoint-xl) {
+    @content;
+  }
+}
+
+// SRM color function
+@function srm-color($srm) {
+  @if $srm <= 2 {
+    @return map-get($srm-colors, 2);
+  } @else if $srm <= 4 {
+    @return map-get($srm-colors, 4);
+  } @else if $srm <= 6 {
+    @return map-get($srm-colors, 6);
+  } @else if $srm <= 10 {
+    @return map-get($srm-colors, 10);
+  } @else if $srm <= 17 {
+    @return map-get($srm-colors, 17);
+  } @else if $srm <= 24 {
+    @return map-get($srm-colors, 24);
+  } @else if $srm <= 35 {
+    @return map-get($srm-colors, 35);
+  } @else {
+    @return map-get($srm-colors, 40);
+  }
+}

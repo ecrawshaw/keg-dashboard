@@ -1,0 +1,146 @@
+@import '../../styles/variables';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    margin-bottom: $spacing-xs;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-md;
+
+  @include tablet {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+.kegItem {
+  background-color: var(--color-surface);
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+
+  @include tablet {
+    padding: $spacing-lg;
+  }
+}
+
+.kegHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1px solid var(--color-surface-light);
+
+  h3 {
+    font-size: $font-size-xl;
+    margin: 0;
+    color: var(--color-primary);
+  }
+
+  .badges {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.kegDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-sm;
+
+  > span:first-child {
+    min-width: 80px;
+  }
+
+  > span:last-child {
+    font-weight: 600;
+    text-align: right;
+  }
+}
+
+.srmIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .srmColor {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-surface-light);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: $spacing-sm;
+  border-top: 1px solid var(--color-surface-light);
+  flex-wrap: wrap;
+
+  button {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+.loading,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 400px;
+  gap: $spacing-md;
+}
+
+.loading {
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--color-surface-light);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+.empty {
+  background-color: var(--color-surface);
+  border: 2px dashed var(--color-surface-light);
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+
+  h2 {
+    color: var(--color-text-muted);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

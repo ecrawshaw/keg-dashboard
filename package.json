@@ -1,0 +1,22 @@
+{
+  "name": "keg-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.84.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.6",
+    "next": "^16.0.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "recharts": "^3.4.1",
+    "sass": "^1.94.2",
+    "typescript": "^5.9.3"
+  }
+}
