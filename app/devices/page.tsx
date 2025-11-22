@@ -26,9 +26,11 @@ export default function DevicesPage() {
 
       if (devicesError) throw devicesError
 
+      const devices = devicesData as Device[] | null
+
       // Fetch latest weight for each device
       const devicesWithWeight: DeviceWithWeight[] = await Promise.all(
-        (devicesData || []).map(async (device) => {
+        (devices || []).map(async (device) => {
           const { data: weightData } = await supabase
             .from('weight_measurements')
             .select('weight_grams, created_at')
@@ -37,10 +39,11 @@ export default function DevicesPage() {
             .limit(1)
             .single()
 
+          const weight = weightData as { weight_grams: number; created_at: string } | null
           return {
             ...device,
-            current_weight: weightData?.weight_grams ?? null,
-            weight_updated_at: weightData?.created_at ?? null,
+            current_weight: weight?.weight_grams ?? null,
+            weight_updated_at: weight?.created_at ?? null,
           }
         })
       )
@@ -101,8 +104,8 @@ export default function DevicesPage() {
 
     setSaving(true)
     try {
-      const { error } = await supabase
-        .from('devices')
+      const { error } = await (supabase
+        .from('devices') as any)
         .update({
           name: editingDevice.name,
           calibration_factor: editingDevice.calibration_factor,

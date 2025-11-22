@@ -47,8 +47,8 @@ export default function ManagePage() {
     if (!confirm(`Delete "${keg.name}"? This cannot be undone.`)) return
 
     try {
-      const { error } = await supabase
-        .from('kegs')
+      const { error } = await (supabase
+        .from('kegs') as any)
         .delete()
         .eq('id', keg.id)
 
@@ -62,8 +62,8 @@ export default function ManagePage() {
 
   const handleToggleActive = async (keg: Keg) => {
     try {
-      const { error } = await supabase
-        .from('kegs')
+      const { error } = await (supabase
+        .from('kegs') as any)
         .update({ is_active: !keg.is_active })
         .eq('id', keg.id)
 

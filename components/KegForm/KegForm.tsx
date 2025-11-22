@@ -41,8 +41,8 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
     try {
       if (isEditing) {
         // Update existing keg
-        const { error: updateError } = await supabase
-          .from('kegs')
+        const { error: updateError } = await (supabase
+          .from('kegs') as any)
           .update({
             ...formData,
             updated_at: new Date().toISOString(),
@@ -52,8 +52,8 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
         if (updateError) throw updateError
       } else {
         // Create new keg
-        const { error: insertError } = await supabase
-          .from('kegs')
+        const { error: insertError } = await (supabase
+          .from('kegs') as any)
           .insert([formData])
 
         if (insertError) throw insertError

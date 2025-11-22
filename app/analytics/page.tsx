@@ -27,9 +27,10 @@ export default function AnalyticsPage() {
         .select('*')
         .order('name')
 
-      if (data && data.length > 0) {
-        setKegs(data)
-        setSelectedKegId(data[0].id)
+      const kegsData = data as CurrentKegStatus[] | null
+      if (kegsData && kegsData.length > 0) {
+        setKegs(kegsData)
+        setSelectedKegId(kegsData[0].id)
       }
       setLoading(false)
     }
@@ -51,9 +52,10 @@ export default function AnalyticsPage() {
         .gte('created_at', new Date(Date.now() - hours * 60 * 60 * 1000).toISOString())
         .order('created_at', { ascending: true })
 
-      if (data) {
+      const measurements = data as { weight_grams: number; created_at: string }[] | null
+      if (measurements) {
         // Group by hour
-        const grouped = data.reduce((acc: Record<string, { sum: number; count: number }>, item) => {
+        const grouped = measurements.reduce((acc: Record<string, { sum: number; count: number }>, item) => {
           const hour = new Date(item.created_at).toLocaleString('en-US', {
             month: 'short',
             day: 'numeric',
