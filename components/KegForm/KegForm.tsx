@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { Keg, KegFormData } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
+import { getKegPresets, type KegPresetKey } from '@/lib/kegPresets'
 import styles from './KegForm.module.scss'
 
 interface KegFormProps {
@@ -14,6 +15,13 @@ interface KegFormProps {
 export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
   const isEditing = !!keg
 
+  const [kegPresets, setKegPresets] = useState(getKegPresets())
+  const [selectedPreset, setSelectedPreset] = useState<KegPresetKey>('custom')
+
+  // Reload presets when component mounts (in case they were updated in settings)
+  useEffect(() => {
+    setKegPresets(getKegPresets())
+  }, [])
   const [formData, setFormData] = useState<KegFormData>({
     name: keg?.name || '',
     beer_name: keg?.beer_name || '',
@@ -23,8 +31,8 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
     ibu: keg?.ibu || null,
     description: keg?.description || '',
     srm: keg?.srm || null,
-    full_weight_grams: keg?.full_weight_grams || 70000,
-    empty_weight_grams: keg?.empty_weight_grams || 15000,
+    full_weight_grams: keg?.full_weight_grams || 72800,
+    empty_weight_grams: keg?.empty_weight_grams || 13500,
     capacity_liters: keg?.capacity_liters || 58.67,
     device_id: keg?.device_id || 'keg-scale-1',
     tapped_at: keg?.tapped_at || new Date().toISOString(),
@@ -77,6 +85,20 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
       ...prev,
       [name]: type === 'number' ? (value ? parseFloat(value) : null) : value,
     }))
+  }
+
+  const handlePresetChange = (presetKey: KegPresetKey) => {
+    setSelectedPreset(presetKey)
+
+    if (presetKey !== 'custom') {
+      const preset = kegPresets[presetKey]
+      setFormData((prev) => ({
+        ...prev,
+        capacity_liters: preset.capacity_liters,
+        empty_weight_grams: preset.empty_weight_grams,
+        full_weight_grams: preset.full_weight_grams,
+      }))
+    }
   }
 
   return (
@@ -228,6 +250,24 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
       <div className={styles.section}>
         <h3>Weight Calibration</h3>
 
+        {/* Preset Selector */}
+        <div className={styles.formGroup}>
+          <label htmlFor="keg_preset">Keg Type</label>
+          <select
+            id="keg_preset"
+            value={selectedPreset}
+            onChange={(e) => handlePresetChange(e.target.value as KegPresetKey)}
+            className={styles.presetSelect}
+          >
+            {Object.entries(kegPresets).map(([key, preset]) => (
+              <option key={key} value={key}>
+                {preset.name} - {preset.description}
+              </option>
+            ))}
+          </select>
+          <small>Select a keg type to auto-fill weights, or choose Custom to enter your own</small>
+        </div>
+
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="empty_weight_grams">Empty Weight (grams) *</label>
@@ -236,13 +276,16 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
               id="empty_weight_grams"
               name="empty_weight_grams"
               value={formData.empty_weight_grams}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e)
+                setSelectedPreset('custom') // Switch to custom if manually adjusted
+              }}
               required
               step="10"
               min="0"
-              placeholder="15000"
+              placeholder="13500"
             />
-            <small>Weight of empty keg</small>
+            <small>Weight of empty keg ({(formData.empty_weight_grams / 1000).toFixed(1)} kg)</small>
           </div>
 
           <div className={styles.formGroup}>
@@ -252,13 +295,16 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
               id="full_weight_grams"
               name="full_weight_grams"
               value={formData.full_weight_grams}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e)
+                setSelectedPreset('custom') // Switch to custom if manually adjusted
+              }}
               required
               step="10"
               min="0"
-              placeholder="70000"
+              placeholder="72800"
             />
-            <small>Weight when full</small>
+            <small>Weight when full ({(formData.full_weight_grams / 1000).toFixed(1)} kg)</small>
           </div>
 
           <div className={styles.formGroup}>
@@ -268,13 +314,16 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
               id="capacity_liters"
               name="capacity_liters"
               value={formData.capacity_liters}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e)
+                setSelectedPreset('custom') // Switch to custom if manually adjusted
+              }}
               required
               step="0.1"
               min="0"
               placeholder="58.67"
             />
-            <small>Half barrel = 58.67L</small>
+            <small>Liquid capacity ({(formData.capacity_liters * 0.264172).toFixed(1)} gallons)</small>
           </div>
         </div>
       </div>

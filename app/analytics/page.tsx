@@ -16,7 +16,6 @@ export default function AnalyticsPage() {
   const [kegs, setKegs] = useState<CurrentKegStatus[]>([])
   const [selectedKegId, setSelectedKegId] = useState<string>('')
   const [consumptionData, setConsumptionData] = useState<ConsumptionData[]>([])
-  const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h')
   const [loading, setLoading] = useState(true)
 
   // Fetch kegs
@@ -38,12 +37,12 @@ export default function AnalyticsPage() {
     fetchKegs()
   }, [])
 
-  // Fetch consumption data when keg or time range changes
+  // Fetch consumption data when keg changes
   useEffect(() => {
     if (!selectedKegId) return
 
     const fetchConsumptionData = async () => {
-      const hours = timeRange === '24h' ? 24 : timeRange === '7d' ? 168 : 720
+      const hours = 24 // Only keeping 24 hours of data
 
       const { data } = await supabase
         .from('weight_measurements')
@@ -83,7 +82,7 @@ export default function AnalyticsPage() {
     }
 
     fetchConsumptionData()
-  }, [selectedKegId, timeRange])
+  }, [selectedKegId])
 
   const selectedKeg = kegs.find((k) => k.id === selectedKegId)
 
@@ -131,27 +130,6 @@ export default function AnalyticsPage() {
               </option>
             ))}
           </select>
-
-          <div className={styles.timeRangeButtons}>
-            <button
-              className={`btn btn-sm ${timeRange === '24h' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setTimeRange('24h')}
-            >
-              24h
-            </button>
-            <button
-              className={`btn btn-sm ${timeRange === '7d' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setTimeRange('7d')}
-            >
-              7d
-            </button>
-            <button
-              className={`btn btn-sm ${timeRange === '30d' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setTimeRange('30d')}
-            >
-              30d
-            </button>
-          </div>
         </div>
       </div>
 
@@ -165,7 +143,7 @@ export default function AnalyticsPage() {
 
           <div className={styles.statCard}>
             <h3>Pints Remaining</h3>
-            <p className={styles.statValue}>{selectedKeg.pints_remaining}</p>
+            <p className={styles.statValue}>{selectedKeg.pints_remaining.toFixed(1)}</p>
             <p className="text-muted">US pints (473ml)</p>
           </div>
 

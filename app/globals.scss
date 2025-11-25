@@ -240,19 +240,35 @@ a {
   }
 
   .logo {
-    font-size: $font-size-2xl;
+    font-size: $font-size-xl;
     margin: 0;
+
+    @include tablet {
+      font-size: $font-size-2xl;
+    }
   }
 
   .nav-links {
     display: flex;
-    gap: $spacing-md;
+    gap: $spacing-xs;
     list-style: none;
+    flex-wrap: nowrap;
+
+    @include tablet {
+      gap: $spacing-md;
+    }
 
     a {
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.6rem;
       border-radius: $border-radius-md;
       transition: background-color $transition-base;
+      font-size: $font-size-sm;
+      white-space: nowrap;
+
+      @include tablet {
+        padding: 0.5rem 1rem;
+        font-size: $font-size-base;
+      }
 
       &:hover {
         background-color: var(--color-surface-light);

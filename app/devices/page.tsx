@@ -15,6 +15,7 @@ export default function DevicesPage() {
   const [loading, setLoading] = useState(true)
   const [editingDevice, setEditingDevice] = useState<DeviceWithWeight | null>(null)
   const [saving, setSaving] = useState(false)
+  const [taringDeviceId, setTaringDeviceId] = useState<string | null>(null)
 
   const fetchDevices = async () => {
     try {
@@ -125,6 +126,29 @@ export default function DevicesPage() {
       alert('Failed to save device settings')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleTare = async (deviceId: string) => {
+    if (!confirm('Tare (zero) this scale? Make sure nothing is on the scale!')) {
+      return
+    }
+
+    setTaringDeviceId(deviceId)
+    try {
+      const { error } = await (supabase
+        .from('devices') as any)
+        .update({ pending_tare: true })
+        .eq('device_id', deviceId)
+
+      if (error) throw error
+
+      alert('Tare command sent! The scale will be zeroed when it next fetches config (within 60 seconds).')
+    } catch (err) {
+      console.error('Error sending tare command:', err)
+      alert('Failed to send tare command')
+    } finally {
+      setTaringDeviceId(null)
     }
   }
 
@@ -293,6 +317,14 @@ export default function DevicesPage() {
                   </div>
 
                   <div className={styles.actions}>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => handleTare(device.device_id)}
+                      disabled={taringDeviceId === device.device_id || !device.is_online}
+                      title={!device.is_online ? 'Device must be online to tare' : 'Tare (zero) the scale'}
+                    >
+                      {taringDeviceId === device.device_id ? 'Sending...' : 'Tare Scale'}
+                    </button>
                     <button className="btn btn-primary" onClick={() => handleEdit(device)}>
                       Edit Settings
                     </button>
