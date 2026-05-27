@@ -20,6 +20,7 @@ export default function RootLayout({
               <h1 className="logo">🍺 Keg Dashboard</h1>
               <ul className="nav-links">
                 <li><a href="/">Dashboard</a></li>
+                <li><a href="/taps">On Tap</a></li>
                 <li><a href="/manage">Manage Kegs</a></li>
                 <li><a href="/devices">Devices</a></li>
                 <li><a href="/analytics">Analytics</a></li>

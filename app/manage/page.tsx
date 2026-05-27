@@ -21,7 +21,7 @@ export default function ManagePage() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setKegs(data || [])
+      setKegs((data || []) as Keg[])
     } catch (err) {
       console.error('Error fetching kegs:', err)
     } finally {

@@ -22,7 +22,7 @@ export default function Home() {
 
       if (error) throw error
 
-      setKegs(data || [])
+      setKegs((data || []) as CurrentKegStatus[])
       setLastUpdate(new Date())
       setError(null)
     } catch (err) {

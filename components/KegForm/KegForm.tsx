@@ -31,6 +31,9 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
     ibu: keg?.ibu || null,
     description: keg?.description || '',
     srm: keg?.srm || null,
+    logo_url: keg?.logo_url || '',
+    tower_number: keg?.tower_number ?? null,
+    tap_position: keg?.tap_position ?? null,
     full_weight_grams: keg?.full_weight_grams || 72800,
     empty_weight_grams: keg?.empty_weight_grams || 13500,
     capacity_liters: keg?.capacity_liters || 58.67,
@@ -144,6 +147,52 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
         </div>
       </div>
 
+      {/* Tap Position */}
+      <div className={styles.section}>
+        <h3>Tap Position</h3>
+
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
+            <label htmlFor="tower_number">Tower</label>
+            <select
+              id="tower_number"
+              name="tower_number"
+              value={formData.tower_number ?? ''}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  tower_number: e.target.value ? parseInt(e.target.value) : null,
+                }))
+              }
+            >
+              <option value="">— Not assigned —</option>
+              <option value="1">Tower 1</option>
+              <option value="2">Tower 2</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="tap_position">Tap</label>
+            <select
+              id="tap_position"
+              name="tap_position"
+              value={formData.tap_position ?? ''}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  tap_position: e.target.value ? parseInt(e.target.value) : null,
+                }))
+              }
+            >
+              <option value="">— Not assigned —</option>
+              <option value="1">Tap 1 (left)</option>
+              <option value="2">Tap 2 (center)</option>
+              <option value="3">Tap 3 (right)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       {/* Beer Details */}
       <div className={styles.section}>
         <h3>Beer Details</h3>
@@ -231,6 +280,19 @@ export default function KegForm({ keg, onSuccess, onCancel }: KegFormProps) {
               placeholder="6"
             />
           </div>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="logo_url">Logo URL</label>
+          <input
+            type="url"
+            id="logo_url"
+            name="logo_url"
+            value={formData.logo_url}
+            onChange={handleChange}
+            placeholder="https://… (leave blank for homebrew — uses SRM color)"
+          />
+          <small>For commercial beers, paste a brand logo URL. Leave blank for homebrew.</small>
         </div>
 
         <div className={styles.formGroup}>

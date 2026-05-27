@@ -10,6 +10,10 @@ export interface Keg {
   ibu: number | null
   description: string | null
   srm: number | null
+  hops: string | null
+  logo_url: string | null
+  tower_number: number | null
+  tap_position: number | null
   full_weight_grams: number
   empty_weight_grams: number
   capacity_liters: number
@@ -69,6 +73,46 @@ export interface KegSession {
   created_at: string
 }
 
+export interface BrewfatherRecipe {
+  _id: string
+  name: string
+  author: string
+  type: string
+  equipment?: {
+    name?: string
+  }
+  style?: {
+    name?: string
+  }
+  abv?: number
+  ibu?: number
+  og?: number
+  fg?: number
+  ogPlato?: number
+  color?: number
+  batchSize?: number
+  boilSize?: number
+  efficiency?: number
+  hops?: Array<{
+    name: string
+    amount: number
+    use: string
+    time?: number
+    alpha?: number
+  }>
+  fermentables?: Array<{
+    name: string
+    amount: number
+    type: string
+    color?: number
+  }>
+  yeast?: {
+    name?: string
+    product?: string
+  }
+  notes?: string
+}
+
 export interface CurrentKegStatus {
   id: string
   name: string
@@ -79,12 +123,16 @@ export interface CurrentKegStatus {
   ibu: number | null
   description: string | null
   srm: number | null
+  logo_url: string | null
+  tower_number: number | null
+  tap_position: number | null
   device_id: string
   full_weight_grams: number
   empty_weight_grams: number
   capacity_liters: number
   tapped_at: string | null
   kicked_at: string | null
+  hops: string | null
   current_weight_grams: number | null
   last_reading_at: string | null
   seconds_since_reading: number | null
@@ -112,6 +160,9 @@ export interface KegFormData {
   ibu: number | null
   description: string
   srm: number | null
+  logo_url: string
+  tower_number: number | null
+  tap_position: number | null
   full_weight_grams: number
   empty_weight_grams: number
   capacity_liters: number

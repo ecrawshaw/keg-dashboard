@@ -40,3 +40,6 @@ next-env.d.ts
 
 # sass
 *.css.map
+
+# supabase CLI temp state
+supabase/.temp/
