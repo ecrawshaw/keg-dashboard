@@ -22,6 +22,30 @@ export default function TapsPage() {
     )
   }
 
+  const handleKegKick = async (kegId: string) => {
+    try {
+      const { error } = await supabase
+        .from('kegs')
+        .update({ is_active: false, kicked_at: new Date().toISOString() })
+        .eq('id', kegId)
+
+      if (error) throw error
+
+      // Immediately reflect in local state while realtime subscription catches up
+      setKegs((prev) =>
+        prev.map((keg) =>
+          keg.id === kegId ? { ...keg, is_active: false, kicked_at: new Date().toISOString() } : keg
+        )
+      )
+
+      // Re-fetch to get clean state from server (realtime may refetch too)
+      await fetchKegs()
+    } catch (err) {
+      console.error('Error kicking keg:', err)
+      alert('Failed to kick keg')
+    }
+  }
+
   const fetchKegs = async () => {
     try {
       const { data, error } = await supabase
@@ -90,7 +114,7 @@ export default function TapsPage() {
             )
             taps.push(keg ?? null)
           }
-          return <TapTower key={towerNumber} towerNumber={towerNumber} taps={taps} onKegUpdate={handleKegUpdate} />
+          return <TapTower key={towerNumber} towerNumber={towerNumber} taps={taps} onKegUpdate={handleKegUpdate} onKegKick={handleKegKick} />
         })}
       </div>
     </div>
