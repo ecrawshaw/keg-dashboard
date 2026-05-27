@@ -11,9 +11,10 @@ interface TapTowerProps {
   towerNumber: number
   taps: (CurrentKegStatus | null)[]
   onKegUpdate?: (kegId: string, updates: Partial<CurrentKegStatus>) => void
+  onKegKick?: (kegId: string) => void
 }
 
-export default function TapTower({ towerNumber, taps, onKegUpdate }: TapTowerProps) {
+export default function TapTower({ towerNumber, taps, onKegUpdate, onKegKick }: TapTowerProps) {
   const [showRecipeSelector, setShowRecipeSelector] = useState(false)
   const [selectedTap, setSelectedTap] = useState<{ tower: number; position: number } | null>(null)
 
@@ -89,11 +90,12 @@ export default function TapTower({ towerNumber, taps, onKegUpdate }: TapTowerPro
 
         <div className={styles.taps}>
           {taps.map((keg, idx) => (
-            <Tap 
-              key={idx} 
-              position={idx + 1} 
-              keg={keg} 
+            <Tap
+              key={idx}
+              position={idx + 1}
+              keg={keg}
               onKegUpdate={onKegUpdate}
+              onKegKick={onKegKick}
               onClick={() => handleTapClick(idx + 1)}
               isActive={selectedTap?.position === idx + 1}
             />
@@ -108,9 +110,17 @@ export default function TapTower({ towerNumber, taps, onKegUpdate }: TapTowerPro
   )
 }
 
-function Tap({ position, keg, onKegUpdate, onClick, isActive }: { position: number; keg: CurrentKegStatus | null; onKegUpdate?: (kegId: string, updates: Partial<CurrentKegStatus>) => void; onClick?: () => void; isActive?: boolean }) {
+function Tap({ position, keg, onKegUpdate, onClick, isActive, onKegKick }: {
+  position: number
+  keg: CurrentKegStatus | null
+  onKegUpdate?: (kegId: string, updates: Partial<CurrentKegStatus>) => void
+  onClick?: () => void
+  isActive?: boolean
+  onKegKick?: (kegId: string) => void
+}) {
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState(keg?.beer_name || '')
+  const [showKickConfirm, setShowKickConfirm] = useState(false)
 
   if (!keg) {
     return (
@@ -161,8 +171,17 @@ function Tap({ position, keg, onKegUpdate, onClick, isActive }: { position: numb
     }
   }
 
+  const handleKick = async () => {
+    if (!keg) return
+    if (onKegKick) {
+      onKegKick(keg.id)
+    } else {
+      setShowKickConfirm(false)
+    }
+  }
+
   return (
-    <div className={`${styles.tap} ${isActive ? styles.tapSelected : ''}`} onClick={onClick}>
+    <div className={`${styles.tap} ${isActive ? styles.tapSelected : ''}`}>
       <div className={styles.tapLabel}>Tap {position}</div>
 
       <div className={styles.artwork}>
@@ -194,17 +213,33 @@ function Tap({ position, keg, onKegUpdate, onClick, isActive }: { position: numb
           <div className={styles.beerName}>{keg.beer_name || 'Unknown Beer'}</div>
         )}
         {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className={styles.editButton}
-            title="Edit beer name"
-          >
-            ✏️
-          </button>
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowKickConfirm(true); }}
+              className={styles.kickButton}
+              title="Remove beer from tap"
+            >
+              ✕
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
+              className={styles.editButton}
+              title="Edit beer name"
+            >
+              ✏️
+            </button>
+          </>
         )}
       </div>
       {keg.brewery && <div className={styles.brewery}>{keg.brewery}</div>}
       {keg.style && <div className={styles.style}>{keg.style}</div>}
+
+      {keg.hops && (
+        <div className={styles.hops}>
+          <span className={styles.hopsLabel}>Hops</span>
+          <span className={styles.hopsValue}>{keg.hops}</span>
+        </div>
+      )}
 
       <div className={styles.specs}>
         <div className={styles.spec}>
@@ -216,6 +251,19 @@ function Tap({ position, keg, onKegUpdate, onClick, isActive }: { position: numb
           <span className={styles.specValue}>{formatIbu(keg.ibu)}</span>
         </div>
       </div>
+
+      {/* Kick confirmation overlay */}
+      {showKickConfirm && (
+        <div className={styles.kickOverlay}>
+          <div className={styles.kickConfirm}>
+            <p>Kick "{keg.beer_name}" from this tap?</p>
+            <div className={styles.kickConfirmActions}>
+              <button className="btn btn-sm btn-secondary" onClick={() => setShowKickConfirm(false)}>Cancel</button>
+              <button className="btn btn-sm btn-primary" onClick={handleKick}>Kick Keg</button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )
